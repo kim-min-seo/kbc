@@ -1,10 +1,25 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
-
-</body>
-</html>
+<nav class="navbar navbar-expand-lg bg-white shadow-sm">
+  <div class="container d-flex align-items-center justify-content-between">
+    <a class="navbar-brand fw-bold fs-2 d-flex align-items-center" href="/">
+      <img src="/static/images/baseball.png" width="38" alt="KBC 로고" class="me-2">
+      KBC
+    </a>
+    <div class="collapse navbar-collapse justify-content-between">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link" href="#">경기 일정</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">기록실</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">순위</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">선수조회</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">커뮤니티</a></li>
+      </ul>
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link" href="/user/login-view">로그인</a></li>
+        <li class="nav-item"><a class="nav-link fw-bold text-primary" href="/user/join-view">회원가입</a></li>
+      </ul>
+      <form class="d-flex ms-3" role="search">
+        <input class="form-control form-control-sm me-2" type="search" placeholder="선수 검색하기">
+        <button class="btn btn-outline-dark btn-sm" type="submit"><i class="bi bi-search"></i></button>
+      </form>
+    </div>
+  </div>
+</nav>

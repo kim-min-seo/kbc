@@ -1,10 +1,93 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
 
-</body>
+<section layout:fragment="contents" class="contents d-flex justify-content-center">
+  <div class="user-box memo-bg w-100" style="max-width: 400px;">
+    <h2 class="text-center mb-4">KBC</h2>
+
+    <div class="row gx-2 mb-4">
+      <div class="col-8">
+        <input type="text" class="form-control rounded-3" id="idInput" placeholder="아이디">
+        <div id="duplicateText" class="small text-danger d-none">중복된 아이디입니다.</div>
+        <div id="availableText" class="small text-success d-none">사용 가능한 아이디입니다.</div>
+      </div>
+      <div class="col-4">
+        <button type="button" class="btn btn-dark w-100 rounded-3" id="duplicateBtn">중복확인</button>
+      </div>
+    </div>
+
+    <input type="password" class="form-control mb-4 rounded-3" id="passwordInput" placeholder="비밀번호">
+    <input type="text" class="form-control mb-4 rounded-3" id="nameInput" placeholder="성명">
+    <input type="text" class="form-control mb-4 rounded-3" id="nicknameInput" placeholder="닉네임">
+    <input type="text" class="form-control mb-4 rounded-3" id="teamInput" placeholder="응원하는 팀">
+
+    <button type="button" class="btn btn-dark w-100 rounded-3 mb-4" id="joinBtn">회원가입</button>
+
+    <div class="text-center mt-4">
+      계정이 있으신가요? <a href="/user/login-view">로그인</a>
+    </div>
+  </div>
+</section>
+
+<script layout:fragment="script">
+  $(document).ready(function () {
+    let isIdValid = false, lastCheckId = "";
+
+    $("#idInput").on("input", function(){
+      lastCheckId = "";
+      isIdValid = false;
+      $("#availableText, #duplicateText").addClass("d-none");
+    });
+
+    $("#duplicateBtn").on("click", function () {
+      const id = $("#idInput").val().trim();
+      if (id === "") {
+        alert("아이디를 입력해주세요!");
+        return;
+      }
+
+      $.get("/user/is-duplicated-id", { loginId: id }, function (response) {
+        lastCheckId = id;
+        if (response.result === "fail") {
+          $("#duplicateText").removeClass("d-none");
+          $("#availableText").addClass("d-none");
+          isIdValid = false;
+        } else {
+          $("#availableText").removeClass("d-none");
+          $("#duplicateText").addClass("d-none");
+          isIdValid = true;
+        }
+      });
+    });
+
+    $("#joinBtn").on("click", function () {
+      const id = $("#idInput").val().trim();
+      const password = $("#passwordInput").val().trim();
+      const name = $("#nameInput").val().trim();
+      const nickname = $("#nicknameInput").val().trim();
+      const team = $("#teamInput").val().trim();
+
+      if (!id || !password || !name || !nickname || !team) {
+        alert("모든 항목을 입력해주세요!");
+        return;
+      }
+
+      if (!isIdValid || id !== lastCheckId) {
+        alert("아이디 중복 확인을 다시 해주세요!");
+        return;
+      }
+
+      $.post("/user/join", { loginId: id, password, name, nickname, preferTeam: team }, function (res) {
+        if (res.result === "success") {
+          location.href = "/user/login-view";
+        } else {
+          alert("회원가입 실패!");
+        }
+      });
+    });
+  });
+</script>
 </html>
