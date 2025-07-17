@@ -8,9 +8,15 @@
   <div class="user-box w-100" style="max-width: 400px;">
     <h2 class="text-center mb-4">KBC</h2>
 
-    <form id="loginForm">
-      <input type="text" id="idInput" class="form-control mb-3" placeholder="아이디를 입력하세요">
-      <input type="password" id="passwordInput" class="form-control mb-3" placeholder="비밀번호를 입력하세요">
+    <!-- 에러 메시지 표시 -->
+    <div th:if="${errorMessage}" class="alert alert-danger text-center" role="alert">
+      <span th:text="${errorMessage}"></span>
+    </div>
+
+    <!-- 로그인 form -->
+    <form action="/user/login" method="post">
+      <input type="text" name="loginId" class="form-control mb-3" placeholder="아이디를 입력하세요" required>
+      <input type="password" name="password" class="form-control mb-3" placeholder="비밀번호를 입력하세요" required>
       <button type="submit" class="btn btn-dark w-100 mb-3">로그인</button>
     </form>
 
@@ -27,41 +33,4 @@
   </div>
 </section>
 
-<script layout:fragment="script">
-  $("#loginForm").on("submit", function(e){
-    e.preventDefault();
-
-    let id = $("#idInput").val();
-    let password = $("#passwordInput").val();
-
-    if(id === ""){
-      alert("아이디를 입력하세요");
-      return;
-    }
-
-    if(password === ""){
-      alert("비밀번호를 입력하세요");
-      return;
-    }
-
-    $.ajax({
-      type: "post",
-      url: "/user/login",
-      data: {
-        loginId: id,
-        password: password
-      },
-      success: function(response){
-        if(response.result === "success"){
-          location.href = "/post/list-view";
-        } else {
-          alert("아이디와 비밀번호를 확인하세요!");
-        }
-      },
-      error: function(){
-        alert("로그인 에러!");
-      }
-    });
-  });
-</script>
 </html>

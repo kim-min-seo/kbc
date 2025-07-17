@@ -7,7 +7,7 @@ body {
 .contents {
   display: flex;
   justify-content: center;
-  padding-top: 150px; /* ✅ 위로 올리되 너무 여백 없지 않게 */
+  padding-top: 150px; 
 }
 
 .user-box {
