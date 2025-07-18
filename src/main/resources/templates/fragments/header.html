@@ -8,14 +8,25 @@
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item"><a class="nav-link" href="#">경기 일정</a></li>
         <li class="nav-item"><a class="nav-link" href="#">기록실</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">순위</a></li>
+        <li class="nav-item"><a class="nav-link" href="/ranking">순위</a></li>
         <li class="nav-item"><a class="nav-link" href="#">선수조회</a></li>
         <li class="nav-item"><a class="nav-link" href="#">커뮤니티</a></li>
       </ul>
-      <ul class="navbar-nav">
+      
+      <!-- 로그인 상태에 따라 분기 -->
+      <!-- 비로그인 -->
+      <ul class="navbar-nav" th:if="${session.userId == null}">
         <li class="nav-item"><a class="nav-link" href="/user/login-view">로그인</a></li>
         <li class="nav-item"><a class="nav-link fw-bold text-primary" href="/user/join-view">회원가입</a></li>
       </ul>
+
+      <!-- 로그인 -->
+      <div class="d-flex align-items-center" th:if="${session.userId != null}">
+        <span class="me-3 fw-bold text-dark" th:text="${session.userNickname}">닉네임</span>
+        <a href="/user/logout" class="btn btn-outline-danger btn-sm">로그아웃</a>
+      </div>
+      
+      
       <form class="d-flex ms-3" role="search">
         <input class="form-control form-control-sm me-2" type="search" placeholder="선수 검색하기">
         <button class="btn btn-outline-dark btn-sm" type="submit"><i class="bi bi-search"></i></button>

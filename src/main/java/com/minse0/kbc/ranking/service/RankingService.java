@@ -20,4 +20,15 @@ public class RankingService {
         return rankingRepository.findByYearOrderByRankAsc(2025);
     }
     
+    public List<Ranking> getRankingByYear(int year) {
+        return rankingRepository.findByYearOrderByRankAsc(year);
+    }
+    public List<Integer> getAvailableYears() {
+        return rankingRepository.findDistinctYears(); 
+    }
+
+
+   
+
+    
 }

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
+
+	<section layout:fragment="contents" class="container mt-5">
+	    <div class="d-flex justify-content-between align-items-center mb-3">
+	        <h3> KBO 팀 순위</h3>
+	        <form method="get" th:action="@{/ranking}">
+	            <select name="year" class="form-select" style="width: 150px;" onchange="this.form.submit()">
+	                <option value="" disabled selected>연도 선택</option>
+	                <option th:each="y : ${years}"
+	                        th:value="${y}"
+	                        th:text="${y}"
+	                        th:selected="${y == selectedYear}">
+	                </option>
+	            </select>
+	        </form>
+	    </div>
+	
+	    <div th:if="${rankings != null}">
+	        <h5 th:text="${selectedYear} + ' 시즌 순위'"></h5>
+	        <table class="table table-bordered text-center mt-3">
+	            <thead class="table-light">
+	                <tr>
+	                    <th>순위</th>
+	                    <th>팀명</th>
+	                    <th>경기</th>
+	                    <th>승</th>
+	                    <th>무</th>
+	                    <th>패</th>
+	                    <th>승률</th>
+	                    <th>게임차</th>
+	                    <th>최근10경기</th>
+	                    <th>연속</th>
+	                    <th>홈</th>
+	                    <th>원정</th>
+	                </tr>
+	            </thead>
+	            <tbody>
+	                <tr th:each="rank : ${rankings}">
+	                    <td th:text="${rank.rank}"></td>	                    	                   	           
+						<td th:text="${rank.team}">
+	                    <td th:text="${rank.gamesPlayed}">129</td>       
+				        <td th:text="${rank.wins}">80</td>              
+				        <td th:text="${rank.draws}">3</td>               
+				        <td th:text="${rank.losses}">46</td>             
+				        <td th:text="${rank.winPercentage}">0.635</td>  
+				        <td th:text="${rank.gamesBehind}">0.0</td>       
+				        <td th:text="${rank.last10}">7-3</td>            
+				        <td th:text="${rank.streak}">3연승</td>         
+				        <td th:text="${rank.homeRecord}">40-20</td>      
+				        <td th:text="${rank.awayRecord}">40-26</td>      
+	                </tr>
+	            </tbody>
+	        </table>
+	    </div>
+	</section>
+	</html>

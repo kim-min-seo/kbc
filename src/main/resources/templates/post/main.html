@@ -1,46 +1,98 @@
 <!DOCTYPE html>
-<html lang="ko"
-      xmlns:th="http://www.thymeleaf.org"
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/default}">
 
-	<section layout:fragment="contents" class="contents team-ranking container mt-5">
-		<h3 class="mb-3">TEAM RANKING</h3>
-		  <table class="table table-bordered text-center">
-		    <thead class="table-light">
-		      <tr>
-		        <th>순위</th>
-		        <th>팀명</th>
-		        <th>경기</th>
-		        <th>승</th>
-		        <th>패</th>
-		        <th>무</th>
-		        <th>승률</th>
-		        <th>게임차</th>
-		        <th>최근 10경기</th>
-		        <th>연속</th>
-		        <th>홈</th>
-     		    <th>원정</th>
-		      </tr>
-		    </thead>
-		    <tbody>
-			   <tr th:each="team : ${rankings}">
-				    <td th:text="${team.rank}"></td>
-				    <td th:text="${team.team}"></td>
-				    <td th:text="${team.gamesPlayed}"></td>
-				    <td th:text="${team.wins}"></td>
-				    <td th:text="${team.losses}"></td>
-				    <td th:text="${team.draws}"></td>
-				    <td th:text="${team.winPercentage}"></td>
-				    <td th:text="${team.gamesBehind}"></td>
-				    <td th:text="${team.last10}"></td>
-				    <td th:text="${team.streak}"></td>
-				    <td th:text="${team.homeRecord}"></td> <!-- 홈 기록 -->
-     		   	    <td th:text="${team.awayRecord}"></td> <!-- 원정 기록 -->
-				</tr>
-			  
-			</tbody>
-		    
+<section layout:fragment="contents" class="container mt-5">
+  <div class="d-flex justify-content-between align-items-start gap-5" style="min-height: 500px;">
+    
+    
+    <div id="mainCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000"
+	     style="width: 400px; height: 400px; position: relative;">
+	  <div class="carousel-inner rounded shadow" style="width: 100%; height: 100%; position: relative; overflow: hidden;">
 	
-	</section>
-</html>	
+	    <div class="carousel-item active" style="width: 100%; height: 100%;">
+	      <img src="/static/images/hongchanggi.jpg" alt="배너 1"
+	           style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;">
+	    </div>
+	
+	    <div class="carousel-item" style="width: 100%; height: 100%;">
+	      <img src="/static/images/lgtwinsV4.jpg" alt="배너 2"
+	           style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;">
+	    </div>
+	
+	    <div class="carousel-item" style="width: 100%; height: 100%;">
+	      <img src="/static/images/spiderPark.webp" alt="배너 3"
+	           style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;">
+	    </div>
+	
+	    <div class="carousel-item" style="width: 100%; height: 100%;">
+	      <img src="/static/images/ParkdingWonChanChiChai.jpg" alt="배너 4"
+	           style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;">
+	    </div>
+	
+	    <div class="carousel-item" style="width: 100%; height: 100%;">
+	      <img src="/static/images/Yum.jpg" alt="배너 5"
+	           style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;">
+	    </div>
+	
+	  </div>
+	
+	  <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
+	    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+	    <span class="visually-hidden">이전</span>
+	  </button>
+	  <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
+	    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+	    <span class="visually-hidden">다음</span>
+	  </button>
+	</div>
+    
+    
+    
+    
+    <div>
+      <h4 class="mb-3">2025 시즌 KBO 팀 순위</h4>
+      <table class="table table-sm table-bordered text-center align-middle" style="font-size: 0.9rem; width: 600px;">
+        <thead class="table-light">
+          <tr>
+            <th>순위</th>
+            <th>팀명</th>
+            <th>경기</th>
+            <th>승</th>
+            <th>패</th>
+            <th>무</th>
+            <th>승률</th>
+            <th>게임차</th>
+            <th>최근10경기</th>
+            <th>연속</th>
+            <th>홈</th>
+            <th>원정</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="team : ${rankings}">
+            <td th:text="${team.rank}"></td>
+            <td th:text="${team.team}"></td>
+            <td th:text="${team.gamesPlayed}"></td>
+            <td th:text="${team.wins}"></td>
+            <td th:text="${team.losses}"></td>
+            <td th:text="${team.draws}"></td>
+            <td th:text="${team.winPercentage}"></td>
+            <td th:text="${team.gamesBehind}"></td>
+            <td th:text="${team.last10}"></td>
+            <td th:text="${team.streak}"></td>
+            <td th:text="${team.homeRecord}"></td>
+            <td th:text="${team.awayRecord}"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+ 
+  <div class="mt-5 text-center" style="min-height: 300px;">
+    <h5 class="text-muted"></h5>
+  </div>
+</section>
