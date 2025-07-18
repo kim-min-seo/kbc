@@ -13,26 +13,34 @@
 		        <th>팀명</th>
 		        <th>경기</th>
 		        <th>승</th>
-		        <th>무</th>
 		        <th>패</th>
+		        <th>무</th>
 		        <th>승률</th>
 		        <th>게임차</th>
+		        <th>최근 10경기</th>
 		        <th>연속</th>
+		        <th>홈</th>
+     		    <th>원정</th>
 		      </tr>
 		    </thead>
 		    <tbody>
-		    	<tr th:each="team, iterStat : ${rankings}">
-			      <td th:text="${iterStat.index + 1}">1</td>
-			      <td th:text="${team}">한화</td>
-			      <td th:text="${#lists.arrayList(85, 86, 85, 87, 88, 86, 85, 87, 88, 89)[iterStat.index]}">85</td>
-			      <td th:text="${#lists.arrayList(53, 47, 48, 46, 45, 43, 41, 40, 38, 26)[iterStat.index]}">50</td>
-			      <td th:text="${#lists.arrayList(0, 2, 3, 1, 4, 3, 2, 5, 2, 3)[iterStat.index]}">2</td>
-			      <td th:text="${#lists.arrayList(32, 37, 34, 40, 39, 40, 42, 42, 48, 60)[iterStat.index]}">33</td>
-			      <td th:text="${#lists.arrayList('0.602', '0.560', '0.558', '0.528', '0.518', '0.512', '0.505', '0.487', '0.425', '0.302')[iterStat.index]}">0.602</td>
-			      <td th:text="${#lists.arrayList('-', '2.5', '4.5', '5.5', '6', '7.5', '9', '9.5', '17.5', '25.5')[iterStat.index]}">-</td>
-			      <td th:text="${#lists.arrayList('4승', '2승', '1패', '3승', '2패', '3패', '1승', '2패', '1패', '6패')[iterStat.index]}">4승</td>
-			    </tr>
-		    </tbody>
+			   <tr th:each="team : ${rankings}">
+				    <td th:text="${team.rank}"></td>
+				    <td th:text="${team.team}"></td>
+				    <td th:text="${team.gamesPlayed}"></td>
+				    <td th:text="${team.wins}"></td>
+				    <td th:text="${team.losses}"></td>
+				    <td th:text="${team.draws}"></td>
+				    <td th:text="${team.winPercentage}"></td>
+				    <td th:text="${team.gamesBehind}"></td>
+				    <td th:text="${team.last10}"></td>
+				    <td th:text="${team.streak}"></td>
+				    <td th:text="${team.homeRecord}"></td> <!-- 홈 기록 -->
+     		   	    <td th:text="${team.awayRecord}"></td> <!-- 원정 기록 -->
+				</tr>
+			  
+			</tbody>
+		    
 	
 	</section>
 </html>	

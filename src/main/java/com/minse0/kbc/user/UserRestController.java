@@ -14,6 +14,8 @@ import com.minse0.kbc.response.ResponseCode;
 import com.minse0.kbc.user.domain.User;
 import com.minse0.kbc.user.service.UserService;
 
+import jakarta.servlet.http.HttpSession;
+
 @RequestMapping("/user")
 @RestController
 public class UserRestController {
@@ -54,6 +56,21 @@ public class UserRestController {
         	return ApiResponse.success(null);
         }
         
+    }
+    @PostMapping("/login")
+    public ApiResponse<Void> apiLogin(@RequestParam String loginId,
+                                      @RequestParam String password,
+                                      HttpSession session) {
+
+        User user = userService.getUser(loginId, password);
+
+        if (user != null) {
+            session.setAttribute("userId", user.getUserId());
+            session.setAttribute("userNickname", user.getNickname());
+            return ApiResponse.success(null); // 로그인 성공
+        } else {
+            return ApiResponse.fail(ResponseCode.LOGIN_FAIL); // 로그인 실패
+        }
     }
 
 }

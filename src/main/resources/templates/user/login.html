@@ -8,15 +8,15 @@
   <div class="user-box w-100" style="max-width: 400px;">
     <h2 class="text-center mb-4">KBC</h2>
 
-    <!-- 에러 메시지 표시 -->
-    <div th:if="${errorMessage}" class="alert alert-danger text-center" role="alert">
-      <span th:text="${errorMessage}"></span>
+    <!-- 에러 메시지 -->
+    <div id="errorBox" class="alert alert-danger text-center d-none" role="alert">
+      <span id="errorMessage">아이디 또는 비밀번호가 일치하지 않습니다.</span>
     </div>
 
-    <!-- 로그인 form -->
-    <form action="/user/login" method="post">
-      <input type="text" name="loginId" class="form-control mb-3" placeholder="아이디를 입력하세요" required>
-      <input type="password" name="password" class="form-control mb-3" placeholder="비밀번호를 입력하세요" required>
+    <!-- 로그인 form (AJAX) -->
+    <form id="loginForm">
+      <input type="text" id="loginId" class="form-control mb-3" placeholder="아이디를 입력하세요" required>
+      <input type="password" id="password" class="form-control mb-3" placeholder="비밀번호를 입력하세요" required>
       <button type="submit" class="btn btn-dark w-100 mb-3">로그인</button>
     </form>
 
@@ -32,5 +32,41 @@
     </div>
   </div>
 </section>
+
+<script layout:fragment="script">
+  $(document).ready(function () {
+    $("#loginForm").on("submit", function (e) {
+      e.preventDefault();
+
+      const loginId = $("#loginId").val().trim();
+      const password = $("#password").val().trim();
+
+      if (!loginId || !password) {
+        alert("아이디와 비밀번호를 모두 입력하세요.");
+        return;
+      }
+
+      $.ajax({
+        type: "POST",
+        url: "/user/login", // RestController의 login
+        data: {
+          loginId: loginId,
+          password: password
+        },
+        success: function (response) {
+          if (response.result === "success") {
+            location.href = "/"; // 메인 페이지로 이동
+          } else {
+            $("#errorBox").removeClass("d-none");
+            $("#errorMessage").text("아이디 또는 비밀번호가 일치하지 않습니다.");
+          }
+        },
+        error: function () {
+          alert("서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+        }
+      });
+    });
+  });
+</script>
 
 </html>

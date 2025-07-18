@@ -5,7 +5,8 @@ public enum ResponseCode {
 	SUCCESS(1000,"success"),
 	
 	DUPLICATE_ID(2001, "duplicate id"),
-	USER_JOIN_FAIL(2002, "user join fail");
+	USER_JOIN_FAIL(2002, "user join fail"),
+	LOGIN_FAIL(2003,"login failed");
 	
 	private int code;
 	private String message;
