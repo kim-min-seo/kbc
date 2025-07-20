@@ -28,16 +28,28 @@ public class Ranking {
     private int year;
     private int rank;
     private String team;
+
+    @Column(name = "games_played")
     private int gamesPlayed;
+
     private int wins;
     private int draws;
     private int losses;
+
+    @Column(name = "win_percentage")
     private double winPercentage;
+
+    @Column(name = "games_behind")
     private int gamesBehind;
 
     @Column(name = "last_10")
     private String last10;
+
     private String streak;
+
+    @Column(name = "home_record")
     private String homeRecord;
+
+    @Column(name = "away_record")
     private String awayRecord;
 }

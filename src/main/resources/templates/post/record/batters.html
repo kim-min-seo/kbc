@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
+
+<div th:fragment="fragment">
+<section layout:fragment="contents" class="container mt-5">
+
+    <!-- 탭 버튼 -->
+    <div class="mb-3">
+        <a th:href="@{/record/batters(year=${year}, team=${team}, sort='AVG')}"
+           class="btn"
+           th:classappend="${requestURI == '/record/batters'} ? ' btn-primary' : ' btn-outline-primary'">타자 기록</a>
+        <a th:href="@{/record/pitchers(year=${year}, team=${team}, sort='ERA')}"
+           class="btn"
+           th:classappend="${requestURI == '/record/pitchers'} ? ' btn-primary' : ' btn-outline-primary'">투수 기록</a>
+    </div>
+
+    <h3 class="mb-4">타자 기록</h3>
+
+    <!-- 검색 필터 -->
+    <form method="get" class="row g-3 mb-4">
+        <div class="col-auto">
+            <select name="year" class="form-select" onchange="this.form.submit()">
+                <option th:each="y : ${#numbers.sequence(1982, 2025)}"
+                        th:value="${y}"
+                        th:selected="${y} == ${year}"
+                        th:text="${y} + '년'">2025년
+                </option>
+            </select>
+        </div>
+        <div class="col-auto">
+            <select name="team" class="form-select" onchange="this.form.submit()">
+                <option value="">전체 팀</option>
+                <option th:each="t : ${teams}"
+                        th:value="${t}"
+                        th:selected="${t} == ${team}"
+                        th:text="${t}">팀명
+                </option>
+            </select>
+        </div>
+        <div class="col-auto">
+            <select name="sort" class="form-select" onchange="this.form.submit()">
+                <option th:value="'AVG'" th:selected="${sort} == 'AVG'">AVG</option>
+                <option th:value="'G'" th:selected="${sort} == 'G'">경기(G)</option>
+                <option th:value="'PA'" th:selected="${sort} == 'PA'">타석(PA)</option>
+                <option th:value="'AB'" th:selected="${sort} == 'AB'">타수(AB)</option>
+                <option th:value="'H'" th:selected="${sort} == 'H'">안타(H)</option>
+                <option th:value="'2B'" th:selected="${sort} == '2B'">2루타(2B)</option>
+                <option th:value="'3B'" th:selected="${sort} == '3B'">3루타(3B)</option>
+                <option th:value="'HR'" th:selected="${sort} == 'HR'">홈런(HR)</option>
+                <option th:value="'RBI'" th:selected="${sort} == 'RBI'">타점(RBI)</option>
+                <option th:value="'SB'" th:selected="${sort} == 'SB'">도루(SB)</option>
+                <option th:value="'CS'" th:selected="${sort} == 'CS'">도루실패(CS)</option>
+                <option th:value="'BB'" th:selected="${sort} == 'BB'">볼넷(BB)</option>
+                <option th:value="'HBP'" th:selected="${sort} == 'HBP'">사구(HBP)</option>
+                <option th:value="'SO'" th:selected="${sort} == 'SO'">삼진(SO)</option>
+                <option th:value="'GDP'" th:selected="${sort} == 'GDP'">병살타(GDP)</option>
+                <option th:value="'E'" th:selected="${sort} == 'E'">실책(E)</option>
+                <option th:value="'R'" th:selected="${sort} == 'R'">득점(R)</option>
+                <option th:value="'TB'" th:selected="${sort} == 'TB'">누타수(TB)</option>
+                <option th:value="'SAC'" th:selected="${sort} == 'SAC'">희생번트(SAC)</option>
+                <option th:value="'SF'" th:selected="${sort} == 'SF'">희생플라이(SF)</option>
+            </select>
+        </div>
+    </form>
+
+    <!-- 타자 기록 테이블 -->
+    <div class="table-responsive">
+        <table class="table table-bordered text-center align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>순위</th>
+                    <th>선수명</th>
+                    <th>팀명</th>
+                    <th>AVG</th>
+                    <th>G</th>
+                    <th>PA</th>
+                    <th>AB</th>
+                    <th>H</th>
+                    <th>2B</th>
+                    <th>3B</th>
+                    <th>HR</th>
+                    <th>RBI</th>
+                    <th>SB</th>
+                    <th>CS</th>
+                    <th>BB</th>
+                    <th>HBP</th>
+                    <th>SO</th>
+                    <th>GDP</th>
+                    <th>E</th>
+                    <th>R</th>
+                    <th>TB</th>
+                    <th>SAC</th>
+                    <th>SF</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="b, iterStat : ${batters}">
+                    <td th:text="${iterStat.index + 1}"></td>
+                    <td th:text="${b.playerName}"></td>
+                    <td th:text="${b.team}"></td>
+                    <td th:text="${b.avg}"></td>
+                    <td th:text="${b.g}"></td>
+                    <td th:text="${b.pa}"></td>
+                    <td th:text="${b.ab}"></td>
+                    <td th:text="${b.h}"></td>
+                    <td th:text="${b.twoB}"></td>
+                    <td th:text="${b.threeB}"></td>
+                    <td th:text="${b.hr}"></td>
+                    <td th:text="${b.rbi}"></td>
+                    <td th:text="${b.sb}"></td>
+                    <td th:text="${b.cs}"></td>
+                    <td th:text="${b.bb}"></td>
+                    <td th:text="${b.hbp}"></td>
+                    <td th:text="${b.so}"></td>
+                    <td th:text="${b.gdp}"></td>
+                    <td th:text="${b.e}"></td>
+                    <td th:text="${b.r}"></td>
+                    <td th:text="${b.tb}"></td>
+                    <td th:text="${b.sac}"></td>
+                    <td th:text="${b.sf}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</section>
+</div>
+</html>
