@@ -6,7 +6,7 @@
 <div th:fragment="fragment">
 <section layout:fragment="contents" class="container mt-5">
 
-    <!-- 탭 버튼 -->
+   
     <div class="mb-3">
         <a th:href="@{/record/batters(year=${year}, team=${team}, sort='AVG')}"
            class="btn"
@@ -18,7 +18,7 @@
 
     <h3 class="mb-4">투수 기록</h3>
 
-    <!-- 검색 필터 -->
+    
     <form method="get" class="row g-3 mb-4">
         <div class="col-auto">
             <select name="year" class="form-select" onchange="this.form.submit()">
@@ -40,27 +40,28 @@
             </select>
         </div>
         <div class="col-auto">
-            <select name="sort" class="form-select" onchange="this.form.submit()">
-                <option th:value="'ERA'" th:selected="${sort} == 'ERA'">ERA</option>
-                <option th:value="'WHIP'" th:selected="${sort} == 'WHIP'">WHIP</option>
-                <option th:value="'G'" th:selected="${sort} == 'G'">경기(G)</option>
-                <option th:value="'W'" th:selected="${sort} == 'W'">승(W)</option>
-                <option th:value="'L'" th:selected="${sort} == 'L'">패(L)</option>
-                <option th:value="'SV'" th:selected="${sort} == 'SV'">세이브(SV)</option>
-                <option th:value="'HLD'" th:selected="${sort} == 'HLD'">홀드(HLD)</option>
-                <option th:value="'IP'" th:selected="${sort} == 'IP'">이닝(IP)</option>
-                <option th:value="'H'" th:selected="${sort} == 'H'">피안타(H)</option>
-                <option th:value="'HR'" th:selected="${sort} == 'HR'">피홈런(HR)</option>
-                <option th:value="'BB'" th:selected="${sort} == 'BB'">볼넷(BB)</option>
-                <option th:value="'HBP'" th:selected="${sort} == 'HBP'">사구(HBP)</option>
-                <option th:value="'SO'" th:selected="${sort} == 'SO'">삼진(SO)</option>
-                <option th:value="'R'" th:selected="${sort} == 'R'">실점(R)</option>
-                <option th:value="'ER'" th:selected="${sort} == 'ER'">자책점(ER)</option>
-            </select>
-        </div>
+		    <select name="sort" class="form-select" onchange="this.form.submit()">
+		        <option th:value="ERA" th:selected="${sort} == 'ERA'">ERA</option>
+		        <option th:value="WHIP" th:selected="${sort} == 'WHIP'">WHIP</option>
+		        <option th:value="G" th:selected="${sort} == 'G'">경기(G)</option>
+		        <option th:value="W" th:selected="${sort} == 'W'">승(W)</option>
+		        <option th:value="L" th:selected="${sort} == 'L'">패(L)</option>
+		        <option th:value="SV" th:selected="${sort} == 'SV'">세이브(SV)</option>
+		        <option th:value="HLD" th:selected="${sort} == 'HLD'">홀드(HLD)</option>
+		        <option th:value="IP" th:selected="${sort} == 'IP'">이닝(IP)</option>
+		        <option th:value="H" th:selected="${sort} == 'H'">피안타(H)</option>
+		        <option th:value="HR" th:selected="${sort} == 'HR'">피홈런(HR)</option>
+		        <option th:value="BB" th:selected="${sort} == 'BB'">볼넷(BB)</option>
+		        <option th:value="HBP" th:selected="${sort} == 'HBP'">사구(HBP)</option>
+		        <option th:value="SO" th:selected="${sort} == 'SO'">삼진(SO)</option>
+		        <option th:value="R" th:selected="${sort} == 'R'">실점(R)</option>
+		        <option th:value="ER" th:selected="${sort} == 'ER'">자책점(ER)</option>
+		    </select>
+		</div>
+        
     </form>
 
-    <!-- 투수 기록 테이블 -->
+    
     <div class="table-responsive">
         <table class="table table-bordered text-center align-middle">
             <thead class="table-light">
