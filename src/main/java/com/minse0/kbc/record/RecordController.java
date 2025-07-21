@@ -21,6 +21,14 @@ import lombok.RequiredArgsConstructor;
 public class RecordController {
 
     private final RecordService recordService;
+    
+    private int resolveYear(Integer year) {
+        return (year != null) ? year : 2025;
+    }
+
+    private String resolveTeam(String team) {
+        return (team != null && !team.isBlank()) ? team : null;
+    }
 
     @GetMapping("/batters")
     public String getBattersStats(@RequestParam(required = false) Integer year,
@@ -67,13 +75,8 @@ public class RecordController {
 
         return "post/record/pitchers";
     }
+    
 
    
-    private int resolveYear(Integer year) {
-        return (year != null) ? year : 2025;
-    }
-
-    private String resolveTeam(String team) {
-        return (team != null && !team.isBlank()) ? team : null;
-    }
+    
 }

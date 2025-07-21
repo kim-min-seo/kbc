@@ -2,6 +2,7 @@ package com.minse0.kbc.record.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.minse0.kbc.record.domain.BattersStats;
@@ -19,91 +20,25 @@ public class RecordService {
     private final PitchersStatsRepository pitchersRepo;
 
     public List<BattersStats> getSortedBatters(int year, String team, String sortKey) {
-        boolean hasTeam = team != null && !team.isBlank();
-
-        return switch (sortKey) {
-            case "AVG" -> hasTeam ? battersRepo.findByYearAndTeamOrderByAvgDesc(year, team)
-                                  : battersRepo.findByYearOrderByAvgDesc(year);
-            case "G" -> hasTeam ? battersRepo.findByYearAndTeamOrderByGDesc(year, team)
-                                : battersRepo.findByYearOrderByGDesc(year);
-            case "PA" -> hasTeam ? battersRepo.findByYearAndTeamOrderByPaDesc(year, team)
-                                 : battersRepo.findByYearOrderByPaDesc(year);
-            case "AB" -> hasTeam ? battersRepo.findByYearAndTeamOrderByAbDesc(year, team)
-                                 : battersRepo.findByYearOrderByAbDesc(year);
-            case "H" -> hasTeam ? battersRepo.findByYearAndTeamOrderByHDesc(year, team)
-                                : battersRepo.findByYearOrderByHDesc(year);
-            case "2B" -> hasTeam ? battersRepo.findByYearAndTeamOrderByTwoBDesc(year, team)
-                                 : battersRepo.findByYearOrderByTwoBDesc(year);
-            case "3B" -> hasTeam ? battersRepo.findByYearAndTeamOrderByThreeBDesc(year, team)
-                                 : battersRepo.findByYearOrderByThreeBDesc(year);
-            case "HR" -> hasTeam ? battersRepo.findByYearAndTeamOrderByHrDesc(year, team)
-                                 : battersRepo.findByYearOrderByHrDesc(year);
-            case "RBI" -> hasTeam ? battersRepo.findByYearAndTeamOrderByRbiDesc(year, team)
-                                  : battersRepo.findByYearOrderByRbiDesc(year);
-            case "SB" -> hasTeam ? battersRepo.findByYearAndTeamOrderBySbDesc(year, team)
-                                 : battersRepo.findByYearOrderBySbDesc(year);
-            case "CS" -> hasTeam ? battersRepo.findByYearAndTeamOrderByCsDesc(year, team)
-                                 : battersRepo.findByYearOrderByCsDesc(year);
-            case "BB" -> hasTeam ? battersRepo.findByYearAndTeamOrderByBbDesc(year, team)
-                                 : battersRepo.findByYearOrderByBbDesc(year);
-            case "HBP" -> hasTeam ? battersRepo.findByYearAndTeamOrderByHbpDesc(year, team)
-                                  : battersRepo.findByYearOrderByHbpDesc(year);
-            case "SO" -> hasTeam ? battersRepo.findByYearAndTeamOrderBySoDesc(year, team)
-                                 : battersRepo.findByYearOrderBySoDesc(year);
-            case "GDP" -> hasTeam ? battersRepo.findByYearAndTeamOrderByGdpDesc(year, team)
-                                  : battersRepo.findByYearOrderByGdpDesc(year);
-            case "E" -> hasTeam ? battersRepo.findByYearAndTeamOrderByEDesc(year, team)
-                                : battersRepo.findByYearOrderByEDesc(year);
-            case "R" -> hasTeam ? battersRepo.findByYearAndTeamOrderByRDesc(year, team)
-                                : battersRepo.findByYearOrderByRDesc(year);
-            case "TB" -> hasTeam ? battersRepo.findByYearAndTeamOrderByTbDesc(year, team)
-                                 : battersRepo.findByYearOrderByTbDesc(year);
-            case "SAC" -> hasTeam ? battersRepo.findByYearAndTeamOrderBySacDesc(year, team)
-                                  : battersRepo.findByYearOrderBySacDesc(year);
-            case "SF" -> hasTeam ? battersRepo.findByYearAndTeamOrderBySfDesc(year, team)
-                                 : battersRepo.findByYearOrderBySfDesc(year);
-            default -> throw new IllegalArgumentException("Invalid sortKey for batters: " + sortKey);
-        };
+        Sort sort = Sort.by(Sort.Order.desc(toBattersProperty(sortKey)));
+        return (team != null && !team.isBlank())
+            ? battersRepo.findByYearAndTeam(year, team, sort)
+            : battersRepo.findByYear(year, sort);
     }
 
     public List<PitchersStats> getSortedPitchers(int year, String team, String sortKey) {
-        boolean hasTeam = team != null && !team.isBlank();
+        Sort.Order order = toPitchersOrder(sortKey);
+        return (team != null && !team.isBlank())
+            ? pitchersRepo.findByYearAndTeam(year, team, Sort.by(order))
+            : pitchersRepo.findByYear(year, Sort.by(order));
+    }
 
-        return switch (sortKey) {
-            case "ERA" -> hasTeam ? pitchersRepo.findByYearAndTeamOrderByEraAsc(year, team)
-                                  : pitchersRepo.findByYearOrderByEraAsc(year);
-            case "WHIP" -> hasTeam ? pitchersRepo.findByYearAndTeamOrderByWhipAsc(year, team)
-                                   : pitchersRepo.findByYearOrderByWhipAsc(year);
-            case "G" -> hasTeam ? pitchersRepo.findByYearAndTeamOrderByGDesc(year, team)
-                                : pitchersRepo.findByYearOrderByGDesc(year);
-            case "W" -> hasTeam ? pitchersRepo.findByYearAndTeamOrderByWDesc(year, team)
-                                : pitchersRepo.findByYearOrderByWDesc(year);
-            case "L" -> hasTeam ? pitchersRepo.findByYearAndTeamOrderByLDesc(year, team)
-                                : pitchersRepo.findByYearOrderByLDesc(year);
-            case "SV" -> hasTeam ? pitchersRepo.findByYearAndTeamOrderBySvDesc(year, team)
-                                 : pitchersRepo.findByYearOrderBySvDesc(year);
-            case "HLD" -> hasTeam ? pitchersRepo.findByYearAndTeamOrderByHldDesc(year, team)
-                                  : pitchersRepo.findByYearOrderByHldDesc(year);
-            case "H" -> hasTeam ? pitchersRepo.findByYearAndTeamOrderByHDesc(year, team)
-                                : pitchersRepo.findByYearOrderByHDesc(year);
-            case "HR" -> hasTeam ? pitchersRepo.findByYearAndTeamOrderByHrDesc(year, team)
-                                 : pitchersRepo.findByYearOrderByHrDesc(year);
-            case "BB" -> hasTeam ? pitchersRepo.findByYearAndTeamOrderByBbDesc(year, team)
-                                 : pitchersRepo.findByYearOrderByBbDesc(year);
-            case "HBP" -> hasTeam ? pitchersRepo.findByYearAndTeamOrderByHbpDesc(year, team)
-                                  : pitchersRepo.findByYearOrderByHbpDesc(year);
-            case "SO" -> hasTeam ? pitchersRepo.findByYearAndTeamOrderBySoDesc(year, team)
-                                 : pitchersRepo.findByYearOrderBySoDesc(year);
-            case "R" -> hasTeam ? pitchersRepo.findByYearAndTeamOrderByRDesc(year, team)
-                                : pitchersRepo.findByYearOrderByRDesc(year);
-            case "ER" -> hasTeam ? pitchersRepo.findByYearAndTeamOrderByErDesc(year, team)
-                                 : pitchersRepo.findByYearOrderByErDesc(year);
-            case "WPCT" -> hasTeam ? pitchersRepo.findByYearAndTeamOrderByWpctDesc(year, team)
-                                   : pitchersRepo.findByYearOrderByWpctDesc(year);
-            case "IP" -> hasTeam ? pitchersRepo.findByYearAndTeamOrderByIpDesc(year, team)
-                                 : pitchersRepo.findByYearOrderByIpDesc(year);
-            default -> throw new IllegalArgumentException("Invalid sortKey for pitchers: " + sortKey);
-        };
+    public List<BattersStats> getYearlyBattersByPlayer(String playerName) {
+        return battersRepo.findByPlayerName(playerName, Sort.by("year"));
+    }
+
+    public List<PitchersStats> getYearlyPitchersByPlayer(String playerName) {
+        return pitchersRepo.findByPlayerName(playerName, Sort.by("year"));
     }
 
     public List<String> getAllTeamsB() {
@@ -112,5 +47,60 @@ public class RecordService {
 
     public List<String> getAllTeamsP() {
         return pitchersRepo.findDistinctTeam();
+    }
+
+    // —— 정렬 키를 JPA 프로퍼티로 매핑 —— 
+
+    private String toBattersProperty(String sortKey) {
+        return switch (sortKey) {
+            case "AVG" -> "avg";
+            case "G"   -> "g";
+            case "PA"  -> "pa";
+            case "AB"  -> "ab";
+            case "H"   -> "h";
+            case "2B"  -> "twoB";
+            case "3B"  -> "threeB";
+            case "HR"  -> "hr";
+            case "RBI" -> "rbi";
+            case "SB"  -> "sb";
+            case "CS"  -> "cs";
+            case "BB"  -> "bb";
+            case "HBP" -> "hbp";
+            case "SO"  -> "so";
+            case "GDP" -> "gdp";
+            case "E"   -> "e";
+            case "R"   -> "r";
+            case "TB"  -> "tb";
+            case "SAC" -> "sac";
+            case "SF"  -> "sf";
+            default    -> throw new IllegalArgumentException("Invalid sortKey for batters: " + sortKey);
+        };
+    }
+
+    private Sort.Order toPitchersOrder(String sortKey) {
+        boolean asc;
+        String prop;
+        switch (sortKey) {
+            case "ERA":  prop = "era";  asc = true;  break;
+            case "WHIP": prop = "whip"; asc = true;  break;
+            case "G":    prop = "g";    asc = false; break;
+            case "W":    prop = "w";    asc = false; break;
+            case "L":    prop = "l";    asc = false; break;
+            case "SV":   prop = "sv";   asc = false; break;
+            case "HLD":  prop = "hld";  asc = false; break;
+            case "H":    prop = "h";    asc = false; break;
+            case "HR":   prop = "hr";   asc = false; break;
+            case "BB":   prop = "bb";   asc = false; break;
+            case "HBP":  prop = "hbp";  asc = false; break;
+            case "SO":   prop = "so";   asc = false; break;
+            case "R":    prop = "r";    asc = false; break;
+            case "ER":   prop = "er";   asc = false; break;
+            case "WPCT": prop = "wpct"; asc = false; break;
+            case "IP":   prop = "ip";   asc = false; break;
+            default: throw new IllegalArgumentException("Invalid sortKey for pitchers: " + sortKey);
+        }
+        return asc
+            ? Sort.Order.asc(prop)
+            : Sort.Order.desc(prop);
     }
 }
