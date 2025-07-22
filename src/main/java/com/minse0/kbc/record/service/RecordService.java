@@ -49,7 +49,7 @@ public class RecordService {
         return pitchersRepo.findDistinctTeam();
     }
 
-    // —— 정렬 키를 JPA 프로퍼티로 매핑 —— 
+   
 
     private String toBattersProperty(String sortKey) {
         return switch (sortKey) {
