@@ -1,8 +1,187 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/default}">
+<head>
+  <title>선수 기록</title>
+</head>
+<body>
 
 <section layout:fragment="contents" class="container mt-5">
 
+  
+  <form th:action="@{/record/player}" method="get" class="row g-2 align-items-center mb-4">
+    <div class="col-auto">
+      <input type="text" name="name"
+             th:value="${name}"
+             class="form-control"
+             placeholder="선수 이름 검색"/>
+    </div>
+    <div class="col-auto">
+      <button type="submit" class="btn btn-dark">검색</button>
+    </div>
+  </form>
+
+  
+  <h3 class="mb-4" th:if="${name != null}" th:text="|‘${name}’ 선수 연도별 기록|">선수 기록</h3>
+
+  
+  <div th:if="${batters != null and !batters.isEmpty()}">
+    <h5 class="mt-4">타자 기록</h5>
+    <div class="table-responsive">
+      <table class="table table-bordered text-center align-middle" id="batterTable">
+        <thead class="table-light">
+          <tr>
+            <th>연도</th><th>팀명</th><th>AVG</th><th>G</th><th>PA</th><th>AB</th>
+            <th>H</th><th>2B</th><th>3B</th><th>HR</th><th>RBI</th><th>SB</th>
+            <th>CS</th><th>BB</th><th>HBP</th><th>SO</th><th>GDP</th><th>E</th>
+            <th>R</th><th>TB</th><th>SAC</th><th>SF</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="b : ${batters}">
+            <td th:text="${b.year}"></td>
+            <td th:text="${b.team}"></td>
+            <td th:text="${b.avg}"></td>
+            <td th:text="${b.g}"></td>
+            <td th:text="${b.pa}"></td>
+            <td th:text="${b.ab}"></td>
+            <td th:text="${b.h}"></td>
+            <td th:text="${b.twoB}"></td>
+            <td th:text="${b.threeB}"></td>
+            <td th:text="${b.hr}"></td>
+            <td th:text="${b.rbi}"></td>
+            <td th:text="${b.sb}"></td>
+            <td th:text="${b.cs}"></td>
+            <td th:text="${b.bb}"></td>
+            <td th:text="${b.hbp}"></td>
+            <td th:text="${b.so}"></td>
+            <td th:text="${b.gdp}"></td>
+            <td th:text="${b.e}"></td>
+            <td th:text="${b.r}"></td>
+            <td th:text="${b.tb}"></td>
+            <td th:text="${b.sac}"></td>
+            <td th:text="${b.sf}"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+ 
+  <div th:if="${pitchers != null and !pitchers.isEmpty()}">
+    <h5 class="mt-5">투수 기록</h5>
+    <div class="table-responsive">
+      <table class="table table-bordered text-center align-middle" id="pitcherTable">
+        <thead class="table-light">
+          <tr>
+            <th>연도</th><th>팀명</th><th>ERA</th><th>WHIP</th><th>G</th>
+            <th>W</th><th>L</th><th>SV</th><th>HLD</th><th>IP</th>
+            <th>H</th><th>HR</th><th>BB</th><th>HBP</th><th>SO</th>
+            <th>R</th><th>ER</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="p : ${pitchers}">
+            <td th:text="${p.year}"></td>
+            <td th:text="${p.team}"></td>
+            <td th:text="${p.era}"></td>
+            <td th:text="${p.whip}"></td>
+            <td th:text="${p.g}"></td>
+            <td th:text="${p.w}"></td>
+            <td th:text="${p.l}"></td>
+            <td th:text="${p.sv}"></td>
+            <td th:text="${p.hld}"></td>
+            <td th:text="${p.ip}"></td>
+            <td th:text="${p.h}"></td>
+            <td th:text="${p.hr}"></td>
+            <td th:text="${p.bb}"></td>
+            <td th:text="${p.hbp}"></td>
+            <td th:text="${p.so}"></td>
+            <td th:text="${p.r}"></td>
+            <td th:text="${p.er}"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
 </section>
+
+
+<th:block layout:fragment="script">
+  		
+  		<script>
+			document.addEventListener("DOMContentLoaded", function() {
+			  const bt = document.getElementById("batterTable");
+			  if (bt) {
+			    const rows = bt.querySelectorAll("tbody tr");
+			    const mapB = {G:3, PA:4, AB:5, H:6, "2B":7, "3B":8, HR:9, RBI:10, SB:11, CS:12, BB:13, HBP:14, SO:15, GDP:16, E:17, R:18, TB:19, SAC:20, SF:21};
+			    let sumB = {}, ab = 0, h = 0;
+			    rows.forEach(r => {
+			      const c = r.children;
+			      for (const k in mapB) {
+			        const v = parseFloat(c[mapB[k]].innerText) || 0;
+			        sumB[k] = (sumB[k] || 0) + v;
+			        if (k === "AB") ab += v;
+			        if (k === "H")  h  += v;
+			      }
+			    });
+			    const avg = ab > 0 ? (h/ab).toFixed(3) : "0.000";
+			    const tr = document.createElement("tr");
+			    tr.style.fontWeight = "bold";
+			    tr.style.backgroundColor = "#f1f1f1";
+			    const valsB = [
+			      "통산","",
+			      avg,
+			      sumB.G, sumB.PA, sumB.AB, sumB.H, sumB["2B"], sumB["3B"],
+			      sumB.HR, sumB.RBI, sumB.SB, sumB.CS, sumB.BB, sumB.HBP,
+			      sumB.SO, sumB.GDP, sumB.E, sumB.R, sumB.TB, sumB.SAC, sumB.SF
+			    ];
+			    valsB.forEach(v => {
+			      const td = document.createElement("td");
+			      td.textContent = v;
+			      tr.appendChild(td);
+			    });
+			    bt.querySelector("tbody").appendChild(tr);
+			  }
+			
+			  const pt = document.getElementById("pitcherTable");
+			  if (pt) {
+			    const rows = pt.querySelectorAll("tbody tr");
+			    const len = rows[0].children.length;
+			    let sumP = Array(len).fill(0), se = 0, sw = 0;
+			    rows.forEach(r => {
+			      const c = r.children;
+			      for (let i = 0; i < len; i++) {
+			        const v = parseFloat(c[i].innerText) || 0;
+			        if (i === 2) se += v;
+			        else if (i === 3) sw += v;
+			        else sumP[i] += v;
+			      }
+			    });
+			    const era  = (se / rows.length).toFixed(2);
+			    const whip = (sw / rows.length).toFixed(2);
+			    sumP[2] = era;
+			    sumP[3] = whip;
+			    sumP[0] = "통산";
+			    sumP[1] = "";
+			    const tr2 = document.createElement("tr");
+			    tr2.style.fontWeight = "bold";
+			    tr2.style.backgroundColor = "#f1f1f1";
+			    sumP.forEach(v => {
+			      const td = document.createElement("td");
+			      td.textContent = v;
+			      tr2.appendChild(td);
+			    });
+			    pt.querySelector("tbody").appendChild(tr2);
+			  }
+			});
+			</script>
+  		
+  	
+</th:block>
+
+</body>
+</html>

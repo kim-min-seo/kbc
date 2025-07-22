@@ -16,27 +16,28 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/player")
+@RequestMapping("/record")
 public class PlayerRecordController {
 
     private final RecordService recordService;
 
-    @GetMapping
+    @GetMapping("/player")
     public String showPlayer(
-            @RequestParam("name") String name,
-            @RequestParam(value = "role", defaultValue = "batters") String role,
+            @RequestParam(value = "name", required = false) String name,
             Model model) {
 
-        model.addAttribute("name", name);
-        model.addAttribute("role", role);
-
-        if ("pitchers".equals(role)) {
-            List<PitchersStats> stats = recordService.getYearlyPitchersByPlayer(name);
-            model.addAttribute("stats", stats);
-        } else {
-            List<BattersStats> stats = recordService.getYearlyBattersByPlayer(name);
-            model.addAttribute("stats", stats);
+        
+        if (name == null || name.isBlank()) {
+            return "post/record/player";
         }
+
+       
+        List<BattersStats> batters  = recordService.getYearlyBattersByPlayer(name);
+        List<PitchersStats> pitchers = recordService.getYearlyPitchersByPlayer(name);
+
+        model.addAttribute("name",     name);
+        model.addAttribute("batters",  batters);
+        model.addAttribute("pitchers", pitchers);
 
         return "post/record/player";
     }
