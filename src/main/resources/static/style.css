@@ -24,3 +24,40 @@ body {
   height: 400px;       
   object-fit: cover;   
 }
+.calendar-day {
+    min-height: 100px;
+    vertical-align: top;
+    position: relative;
+}
+.calendar-day .day-number {
+    display: block;
+    text-align: right;
+    padding: 5px;
+    font-size: 1.1em;
+    color: #333;
+}
+.calendar-day .other-month {
+    color: #ccc;
+}
+.calendar-day .today-highlight {
+    background-color: #d1ecf1;
+    border: 2px solid #007bff;
+    border-radius: 5px;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+}
+.calendar-day .today-highlight .day-number {
+    color: #0056b3;
+    font-weight: bold;
+}
+.game-list {
+    padding-left: 10px;
+    text-align: left;
+    font-size: 0.85em;
+}
+.game-list li {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 2px 0;
+    color: #555;
+}

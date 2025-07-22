@@ -1,7 +1,5 @@
 package com.minse0.kbc.schedule;
 
-
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -27,21 +25,20 @@ public class ScheduleController {
     public String viewSchedule(@RequestParam(value = "year", required = false) Integer year,
                                @RequestParam(value = "month", required = false) Integer month,
                                Model model) {
-        LocalDate now = LocalDate.now();
-        int y = (year == null ? now.getYear() : year);
-        int m = (month == null ? now.getMonthValue() : month);
-        List<List<LocalDate>> weeks = service.generateCalendar(y, m);
-        Map<LocalDate, List<String>> scheduleMap = service.getScheduleMap(y, m);
-        
-        //System.out.println(">>> scheduleMap for " + y + "-" + m + " = " + scheduleMap);
+        LocalDate today = LocalDate.now();
 
-        model.addAttribute("year", y);
-        model.addAttribute("month", m);
+        int currentYear = (year == null ? today.getYear() : year);
+        int currentMonth = (month == null ? today.getMonthValue() : month);
+
+        List<List<LocalDate>> weeks = service.generateCalendar(currentYear, currentMonth);
+        Map<LocalDate, List<String>> scheduleMap = service.getScheduleMap(currentYear, currentMonth);
+        
+        model.addAttribute("year", currentYear);
+        model.addAttribute("month", currentMonth);
         model.addAttribute("weeks", weeks);
         model.addAttribute("scheduleMap", scheduleMap);
-        model.addAttribute("today", LocalDate.now());
+        model.addAttribute("today", today);
 
-        
-        return "post/schedule";
+        return "/post/schedule";
     }
 }
