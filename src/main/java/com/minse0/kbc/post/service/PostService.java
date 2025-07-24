@@ -9,7 +9,7 @@ import com.minse0.kbc.post.repository.PostRepository;
 import com.minse0.kbc.common.Filemanager;
 
 import java.time.LocalDateTime;
-import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
