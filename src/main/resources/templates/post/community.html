@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
+
+<section layout:fragment="contents" class="container mt-5">
+
+  <h1 class="mb-4">커뮤니티</h1>
+
+
+  <div class="card mb-5">
+    <div class="card-body">
+      <form th:action="@{/community}" method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+          <label for="team" class="form-label">팀</label>
+          <input type="text"
+                 class="form-control"
+                 id="team"
+                 name="team"
+                 placeholder="응원할 팀을 입력하세요"
+                 required>
+        </div>
+        <div class="mb-3">
+          <label for="contents" class="form-label">내용</label>
+          <textarea class="form-control"
+                    id="contents"
+                    name="contents"
+                    rows="3"
+                    placeholder="글을 입력하세요"
+                    required></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="imageFile" class="form-label">이미지 첨부</label>
+          <input class="form-control"
+                 type="file"
+                 id="imageFile"
+                 name="imageFile"
+                 accept="image/*">
+        </div>
+        <button type="submit" class="btn btn-primary">등록</button>
+      </form>
+    </div>
+  </div>
+
+
+  <div class="row g-4">
+    <div class="col-12" th:each="post : ${posts}">
+      <div class="card">
+        <div class="card-header">
+          <strong th:text="${post.team}">팀명</strong>
+        </div>
+        <div class="card-body">
+          <p class="card-text" th:text="${post.contents}">내용</p>
+          <div th:if="${post.imagePath != null}">
+            <img th:src="@{${post.imagePath}}"
+                 class="img-fluid rounded"
+                 alt="첨부 이미지">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <nav aria-label="Page navigation" class="mt-4">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" th:classappend="${page > 0} ? '' : 'disabled'">
+        <a class="page-link"
+           th:href="@{/community(page=${page-1},size=${size})}"
+           aria-label="Previous">
+          &laquo; 이전
+        </a>
+      </li>
+      <li class="page-item disabled">
+        <span class="page-link">
+          <span th:text="${page + 1}">1</span> / <span th:text="${totalPages}">1</span>
+        </span>
+      </li>
+      <li class="page-item" th:classappend="${page + 1 < totalPages} ? '' : 'disabled'">
+        <a class="page-link"
+           th:href="@{/community(page=${page+1},size=${size})}"
+           aria-label="Next">
+          다음 &raquo;
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+</section>
+</html>
