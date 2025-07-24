@@ -31,6 +31,22 @@ public class PostRestController {
         result.put("result", success ? "success" : "fail");
         return result;
     }
+    @PutMapping("//update")
+    public Map<String, String> updatePost(
+            @RequestParam Long postId,
+            @RequestParam String team,
+            @RequestParam String contents,
+            @RequestParam(required = false) MultipartFile imageFile,
+            HttpSession session) {
+
+        Long userId = (Long) session.getAttribute("userId");
+        boolean success = postService.updatePost(postId, userId, team, contents, imageFile);
+
+        Map<String, String> result = new HashMap<>();
+        result.put("result", success ? "success" : "fail");
+        return result;
+    }
+
 
     @DeleteMapping("/delete")
     public Map<String, String> deletePost(
