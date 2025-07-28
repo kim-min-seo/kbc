@@ -54,6 +54,7 @@ public class PostController {
         Map<Long, List<Comment>> commentMap = new HashMap<>();
         for (Post p : posts) {
         	 List<Comment> list = commentService.getComments(p.getId());
+        	 commentMap.put(p.getId(), list);
            
         }
         model.addAttribute("commentMap", commentMap);

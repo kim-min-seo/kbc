@@ -90,7 +90,7 @@
                   <strong th:text="${c.user.nickname}">작성자</strong>
                   <span class="ms-2" th:text="${c.content}">댓글 내용</span>
                 </div>
-                <div th:if="${c.user.id} == ${currentUserId}">
+                <div th:if="${c.userId} == ${currentUserId}">
                   <button class="btn btn-sm btn-outline-secondary me-1"
                           data-bs-toggle="collapse"
                           th:data-bs-target="'#editComment_' + ${c.id}">
