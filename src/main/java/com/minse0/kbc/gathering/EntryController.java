@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.minse0.kbc.gathering.domain.Gathering;
 import com.minse0.kbc.gathering.service.EntryService;
@@ -21,24 +22,46 @@ public class EntryController {
     private final GatheringService gatheringService;
 
     @PostMapping("/apply")
-    public String apply(@RequestParam Long gatheringId, HttpSession session) {
+    public String apply(@RequestParam Long gatheringId,
+                        HttpSession session,
+                        RedirectAttributes redirectAttributes) {
+
         Long userId = (Long) session.getAttribute("userId");
-        String nickname = (String) session.getAttribute("nickname");
+        String nickname = (String) session.getAttribute("userNickname");
+
+        if (userId == null || nickname == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "You must be logged in to apply.");
+            return "redirect:/login";
+        }
 
         Gathering gathering = gatheringService.getById(gatheringId);
         if (gathering == null) {
-            throw new IllegalArgumentException("모임을 찾을 수 없습니다.");
+            redirectAttributes.addFlashAttribute("errorMessage", "Gathering not found.");
+            return "redirect:/gathering";
         }
 
+        try {
+            entryService.createEntry(gathering, userId, nickname);
+        } catch (IllegalStateException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
 
-        entryService.createEntry(gathering, userId, nickname);
-        return "redirect:/gathering/detail?id=" + gatheringId;
+        return "redirect:/gathering";
     }
 
     @PostMapping("/delete")
-    public String delete(@RequestParam Long entryId, @RequestParam Long gatheringId, HttpSession session) {
+    public String delete(@RequestParam Long entryId,
+                         @RequestParam Long gatheringId,
+                         HttpSession session,
+                         RedirectAttributes redirectAttributes) {
+
         Long userId = (Long) session.getAttribute("userId");
+        if (userId == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Login required.");
+            return "redirect:/login";
+        }
+
         entryService.deleteEntry(entryId, userId);
-        return "redirect:/gathering/detail?id=" + gatheringId;
+        return "redirect:/gathering";
     }
-}    
+}

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
+
+<section layout:fragment="contents" class="container my-5">
+  <h2 class="mb-4 text-center">모임 만들기</h2>
+
+  <form th:action="@{/gathering/new}" method="post" class="card shadow-sm p-4">
+    <!-- 모임 종류 -->
+    <div class="mb-3">
+      <label class="form-label fw-bold">모임 종류</label>
+      <select class="form-select" name="type" id="typeSelect" required>
+        <option value="DIRECT">직관 모임</option>
+        <option value="PUB">술집 모임</option>
+      </select>
+    </div>
+
+    <!-- 제목 -->
+    <div class="mb-3">
+      <label class="form-label fw-bold">제목</label>
+      <input type="text" class="form-control" name="title" placeholder="모임 제목을 입력하세요" required />
+    </div>
+
+    <!-- 설명 -->
+    <div class="mb-3">
+      <label class="form-label fw-bold">설명</label>
+      <textarea name="content" id="descriptionField" class="form-control" rows="4" placeholder="장소나 세부 내용을 자유롭게 적어주세요" required></textarea>
+    </div>
+
+    <!-- 홈팀/어웨이팀 -->
+    <div class="row mb-3">
+      <div class="col">
+        <label class="form-label">홈 팀</label>
+        <input type="text" class="form-control" name="homeTeam" placeholder="예: LG 트윈스" />
+      </div>
+      <div class="col">
+        <label class="form-label">어웨이 팀</label>
+        <input type="text" class="form-control" name="awayTeam" placeholder="예: 두산 베어스" />
+      </div>
+    </div>
+
+    <!-- 장소 -->
+    <div class="mb-3">
+      <label class="form-label fw-bold">모임 장소 이름</label>
+      <input type="text" class="form-control" name="location" id="locationInput" placeholder="장소 이름(예: 잠실야구장)" required />
+
+      <!-- 위치 좌표 숨김 필드 -->
+      <input type="hidden" name="latitude" id="latitudeInput" />
+      <input type="hidden" name="longitude" id="longitudeInput" />
+
+      <button type="button" class="btn btn-outline-secondary mt-2" onclick="getLocation()">
+        📍 현재 위치 사용
+      </button>
+    </div>
+
+    <!-- 모임 시간 -->
+    <div class="mb-4">
+      <label class="form-label fw-bold">모임 시간</label>
+      <input type="datetime-local" class="form-control" name="meetingTime" required />
+    </div>
+
+    <!-- 등록/돌아가기 버튼 -->
+    <div class="d-flex justify-content-end gap-2 mt-3">
+      <a href="/community" class="btn btn-success btn-sm">커뮤니티로 돌아가기</a>
+      <button type="submit" class="btn btn-primary">모임 등록</button>
+    </div>
+  </form>
+
+  <!-- 위치 정보 가져오기 JS -->
+  <script>
+    function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (pos) {
+          document.getElementById('latitudeInput').value = pos.coords.latitude;
+          document.getElementById('longitudeInput').value = pos.coords.longitude;
+          alert("위치가 설정되었습니다.");
+        }, function (err) {
+          alert("위치 접근에 실패했습니다: " + err.message);
+        });
+      } else {
+        alert("브라우저가 위치 정보를 지원하지 않습니다.");
+      }
+    }
+  </script>
+
+  <!-- 모임 종류 선택 시 설명 자동 입력 JS -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const typeSelect = document.getElementById('typeSelect');
+      const descriptionField = document.getElementById('descriptionField');
+
+      const defaultDescriptions = {
+        DIRECT: "경기장에서 함께 직관하는 모임입니다.\n시간과 장소를 꼭 확인해주세요!",
+        PUB: "편한 술집에서 함께 경기 시청하는 모임입니다.\n참석 여부 댓글 부탁드려요!"
+      };
+
+      typeSelect.addEventListener('change', function () {
+        const selected = this.value;
+        descriptionField.value = defaultDescriptions[selected] || "";
+      });
+    });
+  </script>
+</section>
+</html>

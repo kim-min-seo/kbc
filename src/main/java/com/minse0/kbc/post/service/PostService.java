@@ -1,14 +1,17 @@
 package com.minse0.kbc.post.service;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.*;
+import java.time.LocalDateTime;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.minse0.kbc.common.Filemanager;
 import com.minse0.kbc.post.domain.Post;
 import com.minse0.kbc.post.repository.PostRepository;
-import com.minse0.kbc.common.Filemanager;
 
-import java.time.LocalDateTime;
+import lombok.RequiredArgsConstructor;
 
 
 @Service
@@ -76,4 +79,10 @@ public class PostService {
         postRepository.delete(post);
         return true;
     }
+    public Post save(Post post) {
+        post.setCreatedAt(LocalDateTime.now());
+        post.setUpdatedAt(LocalDateTime.now());
+        return postRepository.save(post);
+    }
+
 }

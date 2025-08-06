@@ -7,6 +7,17 @@
 <section layout:fragment="contents" class="container my-5">
 
   <h1 class="mb-4 text-center">커뮤니티</h1>
+  <!-- 에러 메시지 표시 -->
+<div th:if="${errorMessage}" class="alert alert-danger text-center">
+  <span th:text="${errorMessage}">Error occurred</span>
+</div>
+  
+  
+    <div class="text-center mb-4">
+	  <a class="btn btn-outline-primary me-2" th:href="@{/gathering/DIRECT}">직관 모임 보기</a>
+	  <a class="btn btn-outline-success" th:href="@{/gathering/PUB}">술집 모임 보기</a>
+	</div>
+  
 
   <!-- 글 등록/수정 폼 -->
   <div class="card mb-5 shadow-sm">
@@ -50,6 +61,7 @@
   <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
     <div class="col" th:each="post : ${posts}">
       <div class="card h-100 shadow-sm">
+
         <!-- 헤더: 팀명 + 수정/삭제 -->
         <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center">
           <span class="h6 mb-0" th:text="${post.team}">팀명</span>
@@ -70,11 +82,22 @@
           </div>
         </div>
 
-        <!-- 본문: 내용 + 이미지 -->
+        <!-- 본문: 내용 + 이미지 + 모임 버튼 -->
         <div class="card-body d-flex flex-column">
           <p class="flex-grow-1" th:text="${post.contents}">내용</p>
+
           <div th:if="${post.imagePath != null}" class="mt-3 text-center">
             <img th:src="@{${post.imagePath}}" class="img-fluid rounded" alt="첨부 이미지" />
+          </div>
+
+          <!-- ✅ 모임 신청 버튼 -->
+          <div class="mt-4" th:if="${post.gatheringId != null}">
+            <form th:action="@{/entry/apply}" method="post">
+              <input type="hidden" name="gatheringId" th:value="${post.gatheringId}" />
+              <button type="submit" class="btn btn-outline-success btn-sm w-100">
+                ✋ 이 모임에 신청하기
+              </button>
+            </form>
           </div>
         </div>
 

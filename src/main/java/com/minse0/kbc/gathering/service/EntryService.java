@@ -1,8 +1,10 @@
 package com.minse0.kbc.gathering.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.minse0.kbc.gathering.domain.Entry;
 import com.minse0.kbc.gathering.domain.Gathering;
@@ -16,32 +18,37 @@ public class EntryService {
 
     private final EntryRepository entryRepository;
 
+    @Transactional
     public Entry createEntry(Gathering gathering, Long userId, String nickname) {
         if (entryRepository.existsByGatheringAndUserId(gathering, userId)) {
-            throw new IllegalStateException("이미 신청한 모임입니다.");
+            throw new IllegalStateException("You have already joined this gathering.");
         }
+
         Entry entry = Entry.builder()
                 .gathering(gathering)
                 .userId(userId)
                 .nickname(nickname)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
                 .build();
+
         return entryRepository.save(entry);
     }
 
-    public List<Entry> getEntriesByGathering(Gathering gathering) {
-        return entryRepository.findByGathering(gathering);
-    }
-
-    public List<Entry> getEntriesByUserId(Long userId) {
-        return entryRepository.findByUserId(userId);
-    }
-
+    @Transactional
     public void deleteEntry(Long entryId, Long userId) {
         Entry entry = entryRepository.findById(entryId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 신청입니다."));
+                .orElseThrow(() -> new IllegalArgumentException("Entry not found."));
+
         if (!entry.getUserId().equals(userId)) {
-            throw new SecurityException("삭제 권한이 없습니다.");
+            throw new IllegalStateException("You are not allowed to delete this entry.");
         }
+
         entryRepository.delete(entry);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Entry> getEntriesByGathering(Gathering gathering) {
+        return entryRepository.findByGathering(gathering);
     }
 }

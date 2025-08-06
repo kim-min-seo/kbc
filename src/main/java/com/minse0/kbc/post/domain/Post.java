@@ -1,18 +1,12 @@
 package com.minse0.kbc.post.domain;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
-import com.minse0.kbc.comment.domain.Comment;
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,6 +28,9 @@ public class Post {
     private Long userId;
 
     
+    @Column(name = "gathering_id")
+    private Long gatheringId;
+
     private String team;
 
    
@@ -47,6 +44,8 @@ public class Post {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+    
+  
     
 
 }
