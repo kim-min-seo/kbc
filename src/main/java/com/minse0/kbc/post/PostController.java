@@ -25,9 +25,10 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @Controller
-@RequestMapping("/community")
+@RequestMapping({"/community", "/post/community"}) // ✅ 두 경로 모두 매핑
 @RequiredArgsConstructor
 public class PostController {
+
     private final PostService postService;
     private final CommentService commentService;
 
@@ -50,12 +51,10 @@ public class PostController {
         model.addAttribute("size",       postPage.getSize());
         model.addAttribute("totalPages", postPage.getTotalPages());
 
-      
         Map<Long, List<Comment>> commentMap = new HashMap<>();
         for (Post p : posts) {
-        	 List<Comment> list = commentService.getComments(p.getId());
-        	 commentMap.put(p.getId(), list);
-           
+            List<Comment> list = commentService.getComments(p.getId());
+            commentMap.put(p.getId(), list);
         }
         model.addAttribute("commentMap", commentMap);
 
@@ -66,7 +65,7 @@ public class PostController {
             }
         }
 
-        return "post/community";
+        return "post/community"; // templates/post/community.html
     }
 
     @PostMapping("")
@@ -76,7 +75,7 @@ public class PostController {
                                   HttpSession session) {
         Long userId = (Long) session.getAttribute("userId");
         postService.addPost(userId, team, contents, imageFile);
-        return "redirect:/community";
+        return "redirect:/community"; // ✅ 기본 경로로 정규화
     }
 
     @PostMapping("/edit")
@@ -87,7 +86,7 @@ public class PostController {
                              HttpSession session) {
         Long userId = (Long) session.getAttribute("userId");
         postService.updatePost(id, userId, team, contents, imageFile);
-        return "redirect:/community";
+        return "redirect:/community"; // ✅ 기본 경로로 정규화
     }
 
     @PostMapping("/delete")
@@ -95,6 +94,6 @@ public class PostController {
                              HttpSession session) {
         Long userId = (Long) session.getAttribute("userId");
         postService.deletePost(id, userId);
-        return "redirect:/community";
+        return "redirect:/community"; // ✅ 기본 경로로 정규화
     }
 }

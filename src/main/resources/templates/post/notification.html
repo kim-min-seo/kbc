@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
+
+<section layout:fragment="contents" class="container my-5">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0">알림</h3>
+    <a href="/community" class="btn btn-outline-secondary btn-sm">커뮤니티로</a>
+  </div>
+
+  <div th:if="${#lists.isEmpty(items)}" class="alert alert-light border">새 알림이 없습니다.</div>
+
+  <ul class="list-group" th:if="${!#lists.isEmpty(items)}">
+    <li class="list-group-item" th:each="n : ${items}">
+      <div class="d-flex justify-content-between">
+        <div class="me-3">
+          <div class="fw-semibold" th:text="${n.title}">새 모임 신청</div>
+          <div class="text-muted small mb-2" th:text="${n.message}">
+            닉네임 님이 [모임]에 신청했습니다.
+          </div>
+
+          <!-- 📌 신청 알림이면 바로 수락/거절 버튼 노출 -->
+          <div th:if="${n.type.name() == 'ENTRY_APPLIED'}">
+            <div class="btn-group btn-group-sm" role="group">
+              <form th:action="@{/entry/approve}" method="post" class="d-inline">
+                <input type="hidden" name="entryId" th:value="${n.targetEntryId}">
+                <input type="hidden" name="gatheringId" th:value="${n.targetGatheringId}">
+                <button type="submit" class="btn btn-outline-success">수락</button>
+              </form>
+              <form th:action="@{/entry/reject}" method="post" class="d-inline ms-1">
+                <input type="hidden" name="entryId" th:value="${n.targetEntryId}">
+                <input type="hidden" name="gatheringId" th:value="${n.targetGatheringId}">
+                <button type="submit" class="btn btn-outline-danger">거절</button>
+              </form>
+              <a class="btn btn-outline-secondary ms-1"
+                 th:href="@{'/entry/list'(gatheringId=${n.targetGatheringId})}">
+                신청자 보기
+              </a>
+            </div>
+          </div>
+
+          <!-- 수락/거절 알림은 링크 버튼만 (선택) -->
+          <div th:if="${n.type.name() != 'ENTRY_APPLIED'}">
+            <a th:if="${n.linkUrl != null}" th:href="@{${n.linkUrl}}"
+               class="btn btn-sm btn-outline-primary">바로가기</a>
+          </div>
+        </div>
+
+        <div class="text-nowrap text-secondary small"
+             th:text="${#temporals.format(n.createdAt, 'yyyy-MM-dd HH:mm')}">
+          2025-08-08 14:10
+        </div>
+      </div>
+    </li>
+  </ul>
+</section>
+</html>

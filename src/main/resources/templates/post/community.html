@@ -7,17 +7,21 @@
 <section layout:fragment="contents" class="container my-5">
 
   <h1 class="mb-4 text-center">커뮤니티</h1>
-  <!-- 에러 메시지 표시 -->
-<div th:if="${errorMessage}" class="alert alert-danger text-center">
-  <span th:text="${errorMessage}">Error occurred</span>
-</div>
-  
-  
-    <div class="text-center mb-4">
-	  <a class="btn btn-outline-primary me-2" th:href="@{/gathering/DIRECT}">직관 모임 보기</a>
-	  <a class="btn btn-outline-success" th:href="@{/gathering/PUB}">술집 모임 보기</a>
-	</div>
-  
+
+  <!-- ✅ 성공 메시지 -->
+  <div th:if="${successMessage}" class="alert alert-success text-center">
+    <span th:text="${successMessage}">신청 완료!</span>
+  </div>
+
+  <!-- 에러 메시지 -->
+  <div th:if="${errorMessage}" class="alert alert-danger text-center">
+    <span th:text="${errorMessage}">Error occurred</span>
+  </div>
+
+  <div class="text-center mb-4">
+    <a class="btn btn-outline-primary me-2" th:href="@{/gathering/DIRECT}">직관 모임 보기</a>
+    <a class="btn btn-outline-success" th:href="@{/gathering/PUB}">술집 모임 보기</a>
+  </div>
 
   <!-- 글 등록/수정 폼 -->
   <div class="card mb-5 shadow-sm">
@@ -90,14 +94,22 @@
             <img th:src="@{${post.imagePath}}" class="img-fluid rounded" alt="첨부 이미지" />
           </div>
 
-          <!-- ✅ 모임 신청 버튼 -->
+          <!-- ✅ 모임 신청 버튼/상태 -->
           <div class="mt-4" th:if="${post.gatheringId != null}">
-            <form th:action="@{/entry/apply}" method="post">
-              <input type="hidden" name="gatheringId" th:value="${post.gatheringId}" />
-              <button type="submit" class="btn btn-outline-success btn-sm w-100">
-                ✋ 이 모임에 신청하기
-              </button>
-            </form>
+            <!-- 방금 신청(또는 이미 신청했다는 안내)한 카드 -->
+            <div th:if="${appliedGatheringId != null and appliedGatheringId == post.gatheringId}">
+              <button class="btn btn-success btn-sm w-100" disabled>✅ 신청 완료</button>
+            </div>
+
+            <!-- 그 외 카드 -->
+            <div th:if="${appliedGatheringId == null or appliedGatheringId != post.gatheringId}">
+              <form th:action="@{/entry/apply}" method="post">
+                <input type="hidden" name="gatheringId" th:value="${post.gatheringId}" />
+                <button type="submit" class="btn btn-outline-success btn-sm w-100">
+                  ✋ 이 모임에 신청하기
+                </button>
+              </form>
+            </div>
           </div>
         </div>
 
@@ -116,9 +128,7 @@
                 <div th:if="${c.userId} == ${currentUserId}">
                   <button class="btn btn-sm btn-outline-secondary me-1"
                           data-bs-toggle="collapse"
-                          th:data-bs-target="'#editComment_' + ${c.id}">
-                    수정
-                  </button>
+                          th:data-bs-target="'#editComment_' + ${c.id}">수정</button>
                   <form th:action="@{/comments/delete}" method="post" class="d-inline">
                     <input type="hidden" name="commentId" th:value="${c.id}" />
                     <input type="hidden" name="postId"    th:value="${post.id}" />
@@ -132,8 +142,7 @@
                 <form th:action="@{/comments/edit}" method="post" class="input-group">
                   <input type="hidden" name="commentId" th:value="${c.id}" />
                   <input type="hidden" name="postId"    th:value="${post.id}" />
-                  <input type="text"   name="content" class="form-control"
-                         th:value="${c.content}" />
+                  <input type="text"   name="content" class="form-control" th:value="${c.content}" />
                   <button class="btn btn-primary" type="submit">확인</button>
                 </form>
               </div>
@@ -144,8 +153,7 @@
           <form th:action="@{/comments/add}" method="post" class="mt-3">
             <input type="hidden" name="postId" th:value="${post.id}" />
             <div class="input-group">
-              <input type="text" name="content" class="form-control"
-                     placeholder="댓글을 입력하세요" required />
+              <input type="text" name="content" class="form-control" placeholder="댓글을 입력하세요" required />
               <button class="btn btn-outline-primary" type="submit">등록</button>
             </div>
           </form>
@@ -158,8 +166,7 @@
   <nav aria-label="Page navigation" class="mt-5">
     <ul class="pagination justify-content-center">
       <li class="page-item" th:classappend="${page > 0} ? '' : 'disabled'">
-        <a class="page-link"
-           th:href="@{/community(page=${page-1},size=${size})}">&laquo; 이전</a>
+        <a class="page-link" th:href="@{/community(page=${page-1},size=${size})}">&laquo; 이전</a>
       </li>
       <li class="page-item disabled">
         <span class="page-link">
@@ -168,8 +175,7 @@
         </span>
       </li>
       <li class="page-item" th:classappend="${page + 1 < totalPages} ? '' : 'disabled'">
-        <a class="page-link"
-           th:href="@{/community(page=${page+1},size=${size})}">다음 &raquo;</a>
+        <a class="page-link" th:href="@{/community(page=${page+1},size=${size})}">다음 &raquo;</a>
       </li>
     </ul>
   </nav>

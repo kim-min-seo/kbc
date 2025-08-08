@@ -18,6 +18,34 @@
 
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- 페이지별 추가 스크립트 삽입 지점 -->
   <th:block layout:fragment="script"></th:block>
+
+  <!-- 🔔 알림 뱃지 숫자 로딩 -->
+  <script>
+    (function () {
+      function refreshNotif() {
+        fetch('/api/notifications/unread-count', { credentials: 'same-origin' })
+          .then(function (r) { return r.ok ? r.json() : { count: 0 }; })
+          .then(function (data) {
+            var badge = document.getElementById('notif-badge');
+            if (!badge) return;
+            var count = (data && typeof data.count === 'number') ? data.count : 0;
+            if (count > 0) {
+              badge.textContent = count;
+              badge.classList.remove('d-none');
+            } else {
+              badge.classList.add('d-none');
+            }
+          })
+          .catch(function () { /* no-op */ });
+      }
+
+      document.addEventListener('DOMContentLoaded', function () {
+        refreshNotif();
+      });
+    })();
+  </script>
 </body>
 </html>

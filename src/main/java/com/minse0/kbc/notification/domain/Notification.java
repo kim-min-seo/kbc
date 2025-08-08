@@ -1,4 +1,5 @@
-package com.minse0.kbc.gathering.domain;
+// package: com.minse0.kbc.notification.domain
+package com.minse0.kbc.notification.domain;
 
 import java.time.LocalDateTime;
 
@@ -11,12 +12,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,33 +24,43 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
-@Builder
-@Table(name = "entries")
+@NoArgsConstructor @AllArgsConstructor @Builder
 @EntityListeners(AuditingEntityListener.class)
-public class Entry {
+@Table(name = "notifications")
+public class Notification {
+
+   
+    public enum Type { ENTRY_APPLIED, ENTRY_ACCEPTED, ENTRY_REJECTED }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "gathering_id", nullable = false)
-    private Gathering gathering;
-
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
-
-    @Column(nullable = false)
-    private String nickname;
-
-    // 신청 상태
-    public enum Status { PENDING, ACCEPTED, REJECTED }
+    @Column(name = "receiver_id", nullable = false)
+    private Long receiverId;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 10)
+    @Column(nullable = false, length = 30)
+    private Type type;
+
+    @Column(nullable = false, length = 120)
+    private String title;
+
+    @Column(nullable = false, length = 300)
+    private String message;
+
+    @Column(name = "link_url", length = 255)
+    private String linkUrl;
+    
+    @Column(name = "target_gathering_id")
+    private Long targetGatheringId;
+    
+    @Column(name = "target_entry_id")
+    private Long targetEntryId;
+    
+    @Column(name = "is_read", nullable = false)
     @Builder.Default
-    private Status status = Status.PENDING;
+    private boolean read = false;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)

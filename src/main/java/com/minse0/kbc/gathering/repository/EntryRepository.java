@@ -9,6 +9,10 @@ import com.minse0.kbc.gathering.domain.Gathering;
 
 public interface EntryRepository extends JpaRepository<Entry, Long> {
     List<Entry> findByGathering(Gathering gathering);
+    List<Entry> findByGatheringIdOrderByCreatedAtDesc(Long gatheringId);
+
     List<Entry> findByUserId(Long userId);
     boolean existsByGatheringAndUserId(Gathering gathering, Long userId);
+
+    long countByGatheringId(Long gatheringId);
 }

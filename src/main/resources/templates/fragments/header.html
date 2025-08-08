@@ -4,6 +4,7 @@
       <img src="/static/images/baseball.png" width="38" alt="KBC 로고" class="me-2">
       KBC
     </a>
+
     <div class="collapse navbar-collapse justify-content-between">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item"><a class="nav-link" href="/schedule">경기 일정</a></li>
@@ -12,8 +13,7 @@
         <li class="nav-item"><a class="nav-link" href="/record/player">선수조회</a></li>
         <li class="nav-item"><a class="nav-link" href="/community">커뮤니티</a></li>
       </ul>
-      
-      <!-- 로그인 상태에 따라 분기 -->
+
       <!-- 비로그인 -->
       <ul class="navbar-nav" th:if="${session.userId == null}">
         <li class="nav-item"><a class="nav-link" href="/user/login-view">로그인</a></li>
@@ -23,10 +23,17 @@
       <!-- 로그인 -->
       <div class="d-flex align-items-center" th:if="${session.userId != null}">
         <span class="me-3 fw-bold text-dark" th:text="${session.userNickname}">닉네임</span>
+
+        <!-- 🔔 알림 아이콘 + 뱃지 -->
+        <a href="/notifications" class="nav-link position-relative me-2" title="알림">
+          <i class="bi bi-bell fs-5"></i>
+          <span id="notif-badge"
+                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none">0</span>
+        </a>
+
         <a href="/user/logout" class="btn btn-outline-danger btn-sm">로그아웃</a>
       </div>
-      
-      
+
       <form class="d-flex ms-3" role="search">
         <input class="form-control form-control-sm me-2" type="search" placeholder="선수 검색하기">
         <button class="btn btn-outline-dark btn-sm" type="submit"><i class="bi bi-search"></i></button>
